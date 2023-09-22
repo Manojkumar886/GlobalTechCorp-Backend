@@ -1,12 +1,10 @@
 package EmployeePay.GlobalTechCorp;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class Controller
@@ -26,4 +24,22 @@ public class Controller
         return  serv.viewall();
     }
 //    create and list is over
+
+    @PutMapping("/update")
+    public String updating(@RequestBody EmployeeDetails emp)
+    {
+        EmployeeDetails temp=serv.create(emp);
+        return temp.getEmpId()+" has been updated in your values";
+    }
+    @DeleteMapping("/deleteone/{id}")
+    public String remove(@PathVariable("id")int id)
+    {
+       return serv.remove(id)+" ";
+    }
+
+    @GetMapping("/readone/{empid}")
+    public Optional<EmployeeDetails> readingone(@PathVariable("empid")int empid)
+    {
+        return serv.readone(empid);
+    }
 }
