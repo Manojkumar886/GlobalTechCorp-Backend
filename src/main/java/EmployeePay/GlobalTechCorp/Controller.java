@@ -42,4 +42,22 @@ public class Controller
     {
         return serv.readone(empid);
     }
+
+    @GetMapping("/readbyname/{name}")
+    public EmployeeDetails readingbyname(@PathVariable("name")String name)
+    {
+        return serv.readbyname(name);
+    }
+
+    @GetMapping("/greatestsalaries/{useramount}")
+    public List<EmployeeDetails> gettingtopsalarypeople(@PathVariable("useramount")double useramount)
+    {
+        return serv.readgreatestsalarypeople(useramount);
+    }
+
+    @PutMapping("/updateyoursalary/{empname}")
+    public  EmployeeDetails hikesalary(@PathVariable("empname")String empname)
+    {
+        return  serv.incrementbysalary(empname);
+    }
 }

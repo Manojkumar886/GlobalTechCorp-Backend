@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Data
@@ -21,5 +25,12 @@ public class EmployeeDetails
     private String empExperience;
     @Column(name = "perAnnumSalary")
     private double empSalary;
+//    fetch(Lazy,Eager)
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @Nullable
+    @JoinTable(name = "Allrecords",joinColumns = @JoinColumn(name = "empId")
+            ,inverseJoinColumns = @JoinColumn(name = "payslipId"))
+    private Collection<PayslipDetails> mypayslip=new ArrayList<PayslipDetails>();
+//    list<datatype> objectname=new list<datatype>();
 
 }
