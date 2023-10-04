@@ -47,4 +47,9 @@ public class EmployeeDetailsService
     {
         return repo.findAllByHikeSalary(username);
     }
+
+    public EmployeeDetails gettingexactid(int id )
+    {
+        return repo.findById(id).orElse(new EmployeeDetails());
+    }
 }

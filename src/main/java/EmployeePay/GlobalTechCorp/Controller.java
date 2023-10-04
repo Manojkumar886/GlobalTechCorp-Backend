@@ -11,6 +11,9 @@ public class Controller
 {
     @Autowired
     EmployeeDetailsService serv;
+
+    @Autowired
+    PayslipDetailsService pserv;
 //    URL MAPPING -post(create),put(update),get(list,read),delete(delete)
 //    http://localhost:8081/create
     @PostMapping("/create")
@@ -59,5 +62,34 @@ public class Controller
     public  EmployeeDetails hikesalary(@PathVariable("empname")String empname)
     {
         return  serv.incrementbysalary(empname);
+    }
+
+
+//    payslip performance
+
+    @PostMapping("/createpayslip")
+    public PayslipDetails newpayslip(@RequestBody PayslipDetails payslip)
+    {
+        EmployeeDetails temp=serv.gettingexactid(payslip.getEmployeeDetails().getEmpId());
+
+
+        double monthlysalary=temp.getEmpSalary()/12;//360000/12=36000;
+
+        double basicsalary=monthlysalary+(monthlysalary*(payslip.getPayslipAllowance()/100));
+//                          =36000+(36000*2/100)---->36000+720----->36720;
+        payslip.setPayslipBasicsalary((int)basicsalary);
+
+        basicsalary=basicsalary-(basicsalary*payslip.getPayslipTds()/100);
+
+//                 =36720-(36720*18/100)------>36720-6609----->30110;
+        payslip.setPayslipTakehome((int)basicsalary);
+
+        temp.getMypayslip().add(payslip);//one payslip get in my payslip
+
+        pserv.newpayslip(payslip);//creating an new payslip in payslip table
+
+        serv.create(temp);//updation-added one payslip in your empdetails
+
+        return payslip;
     }
 }
