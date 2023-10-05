@@ -92,4 +92,12 @@ public class Controller
 
         return payslip;
     }
+
+
+    @GetMapping("getallpayslip/{empid}")
+    public  List<PayslipDetails> callbyallpayslip(@PathVariable ("empid")int empid)
+    {
+        EmployeeDetails emp=serv.gettingexactid(empid);
+        return  pserv.getbyempdetails(emp);
+    }
 }

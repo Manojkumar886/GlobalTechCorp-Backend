@@ -1,5 +1,6 @@
 package EmployeePay.GlobalTechCorp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class EmployeeDetails
     @Nullable
     @JoinTable(name = "Allrecords",joinColumns = @JoinColumn(name = "empId")
             ,inverseJoinColumns = @JoinColumn(name = "payslipId"))
+    @JsonManagedReference
     private Collection<PayslipDetails> mypayslip=new ArrayList<PayslipDetails>();
 //    list<datatype> objectname=new list<datatype>();
 
