@@ -23,7 +23,7 @@ public class EmployeeDetails
     private String empUsername;
     private String empPassword;
     private String empDesignation;
-    private String empExperience;
+    private int empExperience;
     @Column(name = "perAnnumSalary")
     private double empSalary;
 //    fetch(Lazy,Eager)
@@ -34,5 +34,7 @@ public class EmployeeDetails
     @JsonManagedReference
     private Collection<PayslipDetails> mypayslip=new ArrayList<PayslipDetails>();
 //    list<datatype> objectname=new list<datatype>();
+
+//    ArrayList<Integer> object=new Arraylist<Integer>
 
 }
