@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/ZealousEmpDetails")//http://localhost:8082/ZealousEmpDetails/
 public class Controller
 {
     @Autowired
