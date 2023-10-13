@@ -1,6 +1,7 @@
 package EmployeePay.GlobalTechCorp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +15,17 @@ public class Controller
     EmployeeDetailsService serv;
 
     @Autowired
+    PasswordEncoder encoder;
+    @Autowired
     PayslipDetailsService pserv;
 //    URL MAPPING -post(create),put(update),get(list,read),delete(delete)
 //    http://localhost:8081/create
     @PostMapping("/create")
     public String Makecreate(@RequestBody EmployeeDetails emp)
     {
+//        Manojkumar -  hewhd2-jdsjdjd82_2982n#%
+        String temp=encoder.encode(emp.getEmpPassword());
+        emp.setEmpPassword(temp);
         return  serv.create(emp).getEmpName()+"has been added in your database";
     }
     @GetMapping("/")

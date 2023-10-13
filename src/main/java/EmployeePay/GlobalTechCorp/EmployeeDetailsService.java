@@ -1,13 +1,16 @@
 package EmployeePay.GlobalTechCorp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeDetailsService
+public class EmployeeDetailsService implements UserDetailsService
 {
     @Autowired//object creation
     EmployeedetailsRepository repo;
@@ -47,4 +50,14 @@ public class EmployeeDetailsService
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+        EmployeeDetails emp=repo.findByEmpUsername(username);
+        if(emp==null)
+        {
+            throw new UsernameNotFoundException(username);
+        }
+        return emp;
+    }
 }

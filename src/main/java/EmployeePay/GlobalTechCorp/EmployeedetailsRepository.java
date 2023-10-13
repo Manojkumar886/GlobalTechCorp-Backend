@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface EmployeedetailsRepository extends JpaRepository<EmployeeDetails,Integer>
 {
+
+    public EmployeeDetails findByEmpUsername(String Username);
     public EmployeeDetails findAllByEmpName(String Name);//no implementation
 
 //    HQL-Hibernate Query Languages
