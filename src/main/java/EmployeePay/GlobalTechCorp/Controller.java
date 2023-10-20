@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/ZealousEmpDetails")//http://localhost:8082/ZealousEmpDetails/
+@CrossOrigin(origins = "http://localhost:3000")
 public class Controller
 {
     @Autowired
@@ -41,10 +42,11 @@ public class Controller
         EmployeeDetails temp=serv.create(emp);
         return temp.getEmpId()+" has been updated in your values";
     }
-    @DeleteMapping("/deleteone/{id}")
-    public String remove(@PathVariable("id")int id)
+    @DeleteMapping("/deleteone/{user}")
+    public String remove(@PathVariable("user")String user)
     {
-       return serv.remove(id)+" ";
+        EmployeeDetails emp=purpose(user);
+       return serv.remove(emp.getEmpId())+" ";
     }
 
     @GetMapping("/readone/{empid}")
@@ -74,37 +76,46 @@ public class Controller
 
 //    payslip performance
 
-    @PostMapping("/createpayslip")
-    public PayslipDetails newpayslip(@RequestBody PayslipDetails payslip)
+    @PostMapping("/createpayslip/{user}")
+    public PayslipDetails newpayslip(@PathVariable ("user")String user,@RequestBody PayslipDetails payslip)
     {
-        EmployeeDetails temp=serv.gettingexactid(payslip.getEmployeeDetails().getEmpId());
-
-
+//        EmployeeDetails temp=serv.gettingexactid(payslip.getEmployeeDetails().getEmpId());
+        EmployeeDetails temp=purpose(user);
         double monthlysalary=temp.getEmpSalary()/12;//360000/12=36000;
 
-        double basicsalary=monthlysalary+(monthlysalary*(payslip.getPayslipAllowance()/100));
-//                          =36000+(36000*2/100)---->36000+720----->36720;
+        double basicsalary=monthlysalary-(monthlysalary*(payslip.getPayslipAllowance()/100));
+//                          =36000-(36000*2/100)---->36000+720----->36720;
         payslip.setPayslipBasicsalary((int)basicsalary);
 
-        basicsalary=basicsalary-(basicsalary*payslip.getPayslipTds()/100);
+        monthlysalary=basicsalary-(monthlysalary*payslip.getPayslipTds()/100);
 
 //                 =36720-(36720*18/100)------>36720-6609----->30110;
-        payslip.setPayslipTakehome((int)basicsalary);
+        payslip.setPayslipTakehome((int)monthlysalary);
 
         temp.getMypayslip().add(payslip);//one payslip get in my payslip
-
-        pserv.newpayslip(payslip);//creating an new payslip in payslip table
-
-        serv.create(temp);//updation-added one payslip in your empdetails
-
+        payslip.setEmployeeDetails(temp);
+        pserv.newpayslip(payslip);
+//        serv.create(temp);//updation-added one payslip in your empdetails
         return payslip;
     }
-
-
     @GetMapping("getallpayslip/{empid}")
     public  List<PayslipDetails> callbyallpayslip(@PathVariable ("empid")int empid)
     {
         EmployeeDetails emp=serv.gettingexactid(empid);
         return  pserv.getbyempdetails(emp);
     }
+
+    @GetMapping("/{user}")//http://localhost:8082/ZealousEmpDetails/ManoHari
+    public EmployeeDetails purpose(@PathVariable("user")String user)
+    {
+        EmployeeDetails emp=(EmployeeDetails) serv.loadUserByUsername(user);
+        return emp;
+    }
+    @GetMapping("/fetch/{user}")
+    public List<PayslipDetails> getbyEmployee(@PathVariable("user")String user)
+    {
+        return  pserv.getbyempdetails(purpose(user));
+    }
+
+//    updating Salary
 }
